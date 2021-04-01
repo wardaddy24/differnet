@@ -32,7 +32,9 @@ class Score_Observer:
 
 
 def train(train_loader, test_loader):
+    print("Inside the train function....")
     model = DifferNet()
+    print("Calling optimizer....")
     optimizer = torch.optim.Adam(model.nf.parameters(), lr=c.lr_init, betas=(0.8, 0.8), eps=1e-04, weight_decay=1e-5)
     model.to(c.device)
 
