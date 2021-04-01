@@ -34,12 +34,14 @@ def save_imgs(inputs, grad, cnt):
 
 
 def export_gradient_maps(model, testloader, optimizer, n_batches=1):
+    print("Inside Export_Gradient_Maps")
     plt.figure(figsize=(10, 10))
     testloader.dataset.get_fixed = True
     cnt = 0
     degrees = -1 * np.arange(c.n_transforms_test) * 360.0 / c.n_transforms_test
 
     # TODO n batches
+    print("Going Inside the for loop...")
     for i, data in enumerate(tqdm(testloader, disable=c.hide_tqdm_bar)):
         optimizer.zero_grad()
         inputs, labels = preprocess_batch(data)
@@ -70,7 +72,8 @@ def export_gradient_maps(model, testloader, optimizer, n_batches=1):
         grad = np.reshape(grad, [grad.shape[0], -1, *grad.shape[-2:]])
         grad_img = np.mean(np.abs(grad), axis=1)
         grad_img_sq = grad_img ** 2
-
+        
+        print("Saving whatever...")
         cnt = save_imgs(inputs_unnormed, grad_img_sq, cnt)
 
         if i == n_batches:
@@ -78,3 +81,4 @@ def export_gradient_maps(model, testloader, optimizer, n_batches=1):
 
     plt.close()
     testloader.dataset.get_fixed = False
+    print("Export Gradient Map executed!!")
