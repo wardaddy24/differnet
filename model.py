@@ -47,9 +47,13 @@ class DifferNet(nn.Module):
 
 
 def save_model(model, filename):
+    print("Inside Save Model Function")
     if not os.path.exists(MODEL_DIR):
+        
+        print("Inside if")
         os.makedirs(MODEL_DIR)
     torch.save(model, os.path.join(MODEL_DIR, filename))
+    print(os.path.join(MODEL_DIR, filename))
 
 
 def load_model(filename):
