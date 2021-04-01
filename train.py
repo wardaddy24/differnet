@@ -96,7 +96,9 @@ def train(train_loader, test_loader):
         export_gradient_maps(model, test_loader, optimizer, -1)
 
     if c.save_model:
+        print("Inside Save model if condition")
         model.to('cpu')
         save_model(model, c.modelname)
+        print("Save_model executed!")
         save_weights(model, c.modelname)
     return model
