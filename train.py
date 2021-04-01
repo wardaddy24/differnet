@@ -91,8 +91,11 @@ def train(train_loader, test_loader):
         anomaly_score = t2np(torch.mean(z_grouped ** 2, dim=(-2, -1)))
         score_obs.update(roc_auc_score(is_anomaly, anomaly_score), epoch,
                          print_score=c.verbose or epoch == c.meta_epochs - 1)
-
+    
+    print("Above grad_map_viz and save_model....", c.grad_map_viz, c.save_model)
+    
     if c.grad_map_viz:
+        print("grad_map_viz.....")
         export_gradient_maps(model, test_loader, optimizer, -1)
 
     if c.save_model:
@@ -101,4 +104,5 @@ def train(train_loader, test_loader):
         save_model(model, c.modelname)
         print("Save_model executed!")
         save_weights(model, c.modelname)
+    
     return model
