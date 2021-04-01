@@ -75,10 +75,12 @@ def export_gradient_maps(model, testloader, optimizer, n_batches=1):
         
         print("Saving whatever...")
         cnt = save_imgs(inputs_unnormed, grad_img_sq, cnt)
-
+        print(i, n_batches)
         if i == n_batches:
             break
+        print("bvcbfusvbfsbvfjvbfbvfvbfkvbrvbrkjbvrnkvbkrjbvrkbvrb")
 
     plt.close()
+    print("plt closed")
     testloader.dataset.get_fixed = False
     print("Export Gradient Map executed!!")
