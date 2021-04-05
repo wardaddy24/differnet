@@ -9,7 +9,7 @@ from model import DifferNet, save_model, save_weights
 from utils import *
 
 # import matplotlib.pyplot as plt
-from azureml.core import Run
+from azureml.core.run import Run
 
 run = Run.get_context()
 
@@ -73,6 +73,7 @@ def train(train_loader, test_loader):
 #         plt.show()
           
         # evaluate
+        print(train_loss)
         run.log_list(name='Training Loss', value=train_loss)
         model.eval()
         if c.verbose:
@@ -93,7 +94,7 @@ def train(train_loader, test_loader):
         if c.verbose:
             print('Epoch: {:d} \t test_loss: {:.4f}'.format(epoch, test_loss))
         
-        
+        print(test_loss)
         run.log_list(name='Test Loss', value=test_loss)
         
         test_labels = np.concatenate(test_labels)
