@@ -52,6 +52,7 @@ def save_model(model, filename):
         
         print("Inside if")
         os.makedirs(MODEL_DIR)
+    print("Saving model at",os.path.join(MODEL_DIR, filename))
     torch.save(model, os.path.join(MODEL_DIR, filename))
     print(os.path.join(MODEL_DIR, filename))
 
