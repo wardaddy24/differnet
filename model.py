@@ -62,7 +62,7 @@ def save_model(model, filename):
     dump(model, model_path)
     print("Saving model at",os.path.join(MODEL_DIR, filename))
     print("Uploading the model into run artifacts...")
-    run.upload_file(name="./outputs/models/" + model_filename, path_or_stream=model_path)
+    run.upload_file(name="./outputs/models/" + filename, path_or_stream=model_path)
     torch.save(model, os.path.join(MODEL_DIR, filename))
     
 
