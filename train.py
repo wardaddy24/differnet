@@ -24,6 +24,7 @@ class Score_Observer:
 
     def update(self, score, epoch, print_score=False):
         self.last = score
+        print(type(score))
         run.log('AUROC',score)
         if epoch == 0 or score > self.max_score:
             self.max_score = score
@@ -61,8 +62,8 @@ def train(train_loader, test_loader):
                 loss = get_loss(z, model.nf.jacobian(run_forward=False))
                 train_loss.append(t2np(loss))
                 print("train_loss",train_loss)
-                print(type(train_loss))
-                run.log_list("Training Loss", train_loss)
+                print(type(train_loss[0]))
+                run.log("Training Loss", train_loss[0].tolist()[0])
                 loss.backward()
                 optimizer.step()
 
@@ -93,8 +94,8 @@ def train(train_loader, test_loader):
                 test_z.append(z)
                 test_loss.append(t2np(loss))
                 print("Test Loss", test_loss)
-                print(type(test_loss))
-                run.log_list("Test Loss",test_loss)
+                print(type(test_loss[0]))
+                run.log("Test Loss",test_loss[0].tolist()[0])
                 test_labels.append(t2np(labels))
 
         test_loss = np.mean(np.array(test_loss))
