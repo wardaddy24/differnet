@@ -8,6 +8,10 @@ from localization import export_gradient_maps
 from model import DifferNet, save_model, save_weights
 from utils import *
 
+# import matplotlib.pyplot as plt
+from azureml.core import Run
+
+run = Run.get_context()
 
 class Score_Observer:
     '''Keeps an eye on the current and highest score so far'''
@@ -20,6 +24,7 @@ class Score_Observer:
 
     def update(self, score, epoch, print_score=False):
         self.last = score
+        run.log('AUROC',score)
         if epoch == 0 or score > self.max_score:
             self.max_score = score
             self.max_epoch = epoch
@@ -32,9 +37,7 @@ class Score_Observer:
 
 
 def train(train_loader, test_loader):
-    print("Inside the train function....")
     model = DifferNet()
-    print("Calling optimizer....")
     optimizer = torch.optim.Adam(model.nf.parameters(), lr=c.lr_init, betas=(0.8, 0.8), eps=1e-04, weight_decay=1e-5)
     model.to(c.device)
 
@@ -63,8 +66,14 @@ def train(train_loader, test_loader):
             mean_train_loss = np.mean(train_loss)
             if c.verbose:
                 print('Epoch: {:d}.{:d} \t train loss: {:.4f}'.format(epoch, sub_epoch, mean_train_loss))
-
+      
+#         plt.plot(list(range(0,c.sub_epochs)), train_loss, 'g', label='Training loss')
+#         plt.xlabel('Iterations')
+#         plt.ylabel('Training Loss')
+#         plt.show()
+          
         # evaluate
+        run.log_list(name='Training Loss', value=train_loss)
         model.eval()
         if c.verbose:
             print('\nCompute loss and scores on test set:')
@@ -83,7 +92,10 @@ def train(train_loader, test_loader):
         test_loss = np.mean(np.array(test_loss))
         if c.verbose:
             print('Epoch: {:d} \t test_loss: {:.4f}'.format(epoch, test_loss))
-
+        
+        
+        run.log_list(name='Test Loss', value=test_loss)
+        
         test_labels = np.concatenate(test_labels)
         is_anomaly = np.array([0 if l == 0 else 1 for l in test_labels])
 
@@ -91,18 +103,13 @@ def train(train_loader, test_loader):
         anomaly_score = t2np(torch.mean(z_grouped ** 2, dim=(-2, -1)))
         score_obs.update(roc_auc_score(is_anomaly, anomaly_score), epoch,
                          print_score=c.verbose or epoch == c.meta_epochs - 1)
-    
-    print("Above grad_map_viz and save_model....", c.grad_map_viz, c.save_model)
 
     
     
     if c.grad_map_viz:
-        print("grad_map_viz.....")
         export_gradient_maps(model, test_loader, optimizer, -1)
-        print("Grad ended.....")
         
     if c.save_model:
-        print("Inside Save model if condition")
         model.to('cpu')
         save_model(model, c.modelname)
         print("Save_model executed!")
