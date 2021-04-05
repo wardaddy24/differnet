@@ -93,7 +93,14 @@ def train(train_loader, test_loader):
                          print_score=c.verbose or epoch == c.meta_epochs - 1)
     
     print("Above grad_map_viz and save_model....", c.grad_map_viz, c.save_model)
+
     
+    
+    if c.grad_map_viz:
+        print("grad_map_viz.....")
+        export_gradient_maps(model, test_loader, optimizer, -1)
+        print("Grad ended.....")
+        
     if c.save_model:
         print("Inside Save model if condition")
         model.to('cpu')
@@ -101,12 +108,5 @@ def train(train_loader, test_loader):
         print(model, c.modelname)
         print("Save_model executed!")
         save_weights(model, c.modelname)
-    
-    
-    if c.grad_map_viz:
-        print("grad_map_viz.....")
-        export_gradient_maps(model, test_loader, optimizer, -1)
-        print("Grad ended.....")
-
 
     return model
