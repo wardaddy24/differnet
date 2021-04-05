@@ -45,8 +45,7 @@ def export_gradient_maps(model, testloader, optimizer, n_batches=1):
     for i, data in enumerate(tqdm(testloader, disable=c.hide_tqdm_bar)):
         optimizer.zero_grad()
         inputs, labels = preprocess_batch(data)
-        print("Cuda Line Executed....")
-        inputs, labels = inputs.cuda(), labels.cuda()
+     
         inputs = Variable(inputs, requires_grad=True)
 
         emb = model(inputs)
