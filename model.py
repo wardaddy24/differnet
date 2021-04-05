@@ -4,11 +4,14 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from torchvision.models import alexnet
+from azureml.core.run import Run
+from joblib import dump
 
 import config as c
 from freia_funcs import permute_layer, glow_coupling_layer, F_fully_connected, ReversibleGraphNet, OutputNode, \
     InputNode, Node
 
+run = Run.get_context()
 WEIGHT_DIR = './weights'
 MODEL_DIR = './models'
 
@@ -47,16 +50,21 @@ class DifferNet(nn.Module):
 
 
 def save_model(model, filename):
+    outputs_folder = './model'
+    os.makedirs(outputs_folder, exist_ok=True)
     print("Inside Save Model Function")
-    if not os.path.exists(MODEL_DIR):
-        
+    if not os.path.exists(MODEL_DIR):        
         print("Inside if")
         os.makedirs(MODEL_DIR)
+   
+    model_path = os.path.join(outputs_folder, filename)
+    print("dumping....")
+    dump(model, model_path)
     print("Saving model at",os.path.join(MODEL_DIR, filename))
+    print("Uploading the model into run artifacts...")
+    run.upload_file(name="./outputs/models/" + model_filename, path_or_stream=model_path)
     torch.save(model, os.path.join(MODEL_DIR, filename))
-    print(os.path.join(MODEL_DIR, filename))
-    print(os.getcwd())
-
+    
 
 def load_model(filename):
     path = os.path.join(MODEL_DIR, filename)
