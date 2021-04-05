@@ -60,6 +60,8 @@ def train(train_loader, test_loader):
                 z = model(inputs)
                 loss = get_loss(z, model.nf.jacobian(run_forward=False))
                 train_loss.append(t2np(loss))
+                print("train_loss",train_loss)
+                run.log("Training Loss", train_loss)
                 loss.backward()
                 optimizer.step()
 
@@ -74,7 +76,7 @@ def train(train_loader, test_loader):
           
         # evaluate
         print(train_loss)
-        run.log_list(name='Training Loss', value=train_loss)
+        
         model.eval()
         if c.verbose:
             print('\nCompute loss and scores on test set:')
@@ -88,6 +90,8 @@ def train(train_loader, test_loader):
                 loss = get_loss(z, model.nf.jacobian(run_forward=False))
                 test_z.append(z)
                 test_loss.append(t2np(loss))
+                print("Test Loss", test_loss)
+                run.log("Test Loss",test_loss)
                 test_labels.append(t2np(labels))
 
         test_loss = np.mean(np.array(test_loss))
@@ -95,7 +99,7 @@ def train(train_loader, test_loader):
             print('Epoch: {:d} \t test_loss: {:.4f}'.format(epoch, test_loss))
         
         print(test_loss)
-        run.log_list(name='Test Loss', value=test_loss)
+        
         
         test_labels = np.concatenate(test_labels)
         is_anomaly = np.array([0 if l == 0 else 1 for l in test_labels])
