@@ -45,6 +45,8 @@ def export_gradient_maps(model, testloader, optimizer, n_batches=1):
     for i, data in enumerate(tqdm(testloader, disable=c.hide_tqdm_bar)):
         optimizer.zero_grad()
         inputs, labels = preprocess_batch(data)
+        print("Cuda Line Executed....")
+        inputs, labels = inputs.cuda(), labels.cuda()
         inputs = Variable(inputs, requires_grad=True)
 
         emb = model(inputs)
@@ -60,7 +62,7 @@ def export_gradient_maps(model, testloader, optimizer, n_batches=1):
         inputs = inputs.view(-1, c.n_transforms_test, *inputs.shape[-3:])[:, 0]
         inputs = np.transpose(t2np(inputs[labels > 0]), [0, 2, 3, 1])
         inputs_unnormed = np.clip(inputs * c.norm_std + c.norm_mean, 0, 1)
-
+        print("Just before the second for loop...")
         for i_item in range(c.n_transforms_test):
             old_shape = grad[:, i_item].shape
             img = np.reshape(grad[:, i_item], [-1, *grad.shape[-2:]])
