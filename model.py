@@ -55,6 +55,7 @@ def save_model(model, filename):
     print("Saving model at",os.path.join(MODEL_DIR, filename))
     torch.save(model, os.path.join(MODEL_DIR, filename))
     print(os.path.join(MODEL_DIR, filename))
+    print(os.getcwd())
 
 
 def load_model(filename):
