@@ -105,7 +105,6 @@ def train(train_loader, test_loader):
         print("Inside Save model if condition")
         model.to('cpu')
         save_model(model, c.modelname)
-        print(model, c.modelname)
         print("Save_model executed!")
         save_weights(model, c.modelname)
 
