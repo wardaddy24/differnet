@@ -79,8 +79,7 @@ def train(train_loader, test_loader):
 #         plt.show()
           
         # evaluate
-        print(train_loss)
-        print(type(train_loss))
+        print("Train Loss log:",train_loss)
         
         model.eval()
         if c.verbose:
@@ -95,12 +94,12 @@ def train(train_loader, test_loader):
                 loss = get_loss(z, model.nf.jacobian(run_forward=False))
                 test_z.append(z)
                 test_loss.append(t2np(loss))
-                print("Test Loss", test_loss)
-                print(type(test_loss[0]))
-                lossy2 = test_loss[0].tolist()
-                run.log("Test Loss", lossy2)
                 test_labels.append(t2np(labels))
-
+          
+        print("Test Loss", test_loss)
+        print(type(test_loss[0]))
+        lossy2 = test_loss[0].tolist()
+        run.log("Test Loss", lossy2)
         test_loss = np.mean(np.array(test_loss))
         if c.verbose:
             print('Epoch: {:d} \t test_loss: {:.4f}'.format(epoch, test_loss))
@@ -113,6 +112,8 @@ def train(train_loader, test_loader):
 
         z_grouped = torch.cat(test_z, dim=0).view(-1, c.n_transforms_test, c.n_feat)
         anomaly_score = t2np(torch.mean(z_grouped ** 2, dim=(-2, -1)))
+        print("anomaly_score",anomaly_score)
+        print("roc_auc_score", roc_auc_score(is_anomaly, anomaly_score))
         score_obs.update(roc_auc_score(is_anomaly, anomaly_score), epoch,
                          print_score=c.verbose or epoch == c.meta_epochs - 1)
 
