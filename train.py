@@ -79,6 +79,7 @@ def train(train_loader, test_loader):
 #         plt.show()
           
         # evaluate
+        
         print("Train Loss log:",train_loss)
         
         model.eval()
