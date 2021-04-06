@@ -54,7 +54,6 @@ def save_model(model, filename):
     os.makedirs(outputs_folder, exist_ok=True)
     print("Inside Save Model Function")
     if not os.path.exists(MODEL_DIR):        
-        print("Inside if")
         os.makedirs(MODEL_DIR)
    
     model_path = os.path.join(outputs_folder, filename)
