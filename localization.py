@@ -41,7 +41,7 @@ def export_gradient_maps(model, testloader, optimizer, n_batches=1):
     degrees = -1 * np.arange(c.n_transforms_test) * 360.0 / c.n_transforms_test
 
     # TODO n batches
-    print("Going Inside the for loop...")
+    
     for i, data in enumerate(tqdm(testloader, disable=c.hide_tqdm_bar)):
         optimizer.zero_grad()
         inputs, labels = preprocess_batch(data)
@@ -61,7 +61,7 @@ def export_gradient_maps(model, testloader, optimizer, n_batches=1):
         inputs = inputs.view(-1, c.n_transforms_test, *inputs.shape[-3:])[:, 0]
         inputs = np.transpose(t2np(inputs[labels > 0]), [0, 2, 3, 1])
         inputs_unnormed = np.clip(inputs * c.norm_std + c.norm_mean, 0, 1)
-        print("Just before the second for loop...")
+        
         for i_item in range(c.n_transforms_test):
             old_shape = grad[:, i_item].shape
             img = np.reshape(grad[:, i_item], [-1, *grad.shape[-2:]])
@@ -74,12 +74,12 @@ def export_gradient_maps(model, testloader, optimizer, n_batches=1):
         grad_img = np.mean(np.abs(grad), axis=1)
         grad_img_sq = grad_img ** 2
         
-        print("Saving whatever...")
+        
         cnt = save_imgs(inputs_unnormed, grad_img_sq, cnt)
-        print(i, n_batches)
+       
         if i == n_batches:
             break
-        print("bvcbfusvbfsbvfjvbfbvfvbfkvbrvbrkjbvrnkvbkrjbvrkbvrb")
+       
 
     plt.close()
     print("plt closed")
