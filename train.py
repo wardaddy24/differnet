@@ -65,7 +65,7 @@ def train(train_loader, test_loader):
                 print(type(train_loss[0]),train_loss[0])
                 lossy = train_loss[0].tolist()
                 print(lossy)
-                run.log("Training Loss", lossy[0] )
+                run.log("Training Loss", lossy )
                 loss.backward()
                 optimizer.step()
 
@@ -98,7 +98,7 @@ def train(train_loader, test_loader):
                 print("Test Loss", test_loss)
                 print(type(test_loss[0]))
                 lossy2 = test_loss[0].tolist()
-                run.log("Test Loss", lossy2[0])
+                run.log("Test Loss", lossy2)
                 test_labels.append(t2np(labels))
 
         test_loss = np.mean(np.array(test_loss))
