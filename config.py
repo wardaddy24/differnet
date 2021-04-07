@@ -31,7 +31,7 @@ dropout = 0.0 # dropout in s-t-networks
 lr_init = 2e-4
 n_feat = 256 * n_scales # do not change except you change the feature extractor
 
-# dataloader parameters..
+# dataloader parameters.....
 n_transforms = 4 # number of transformations per sample in training
 n_transforms_test = 64 # number of transformations per sample in testing
 batch_size = 24 # actual batch size is this value multiplied by n_transforms(_test)
